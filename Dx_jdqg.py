@@ -465,7 +465,9 @@ def main():
     if os.environ.get('jdhf')!= None:
         chinaTelecomAccount = os.environ.get('jdhf')
     else:
-       chinaTelecomAccount = jdhf
+        print("请先设置 jdhf 变量")
+        exit() 
+        chinaTelecomAccount = jdhf
     
     for i in chinaTelecomAccount.split('&'):
 
