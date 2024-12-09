@@ -466,6 +466,7 @@ def main():
         chinaTelecomAccount = os.environ.get('jdhf')
     else:
         print("请先设置 jdhf 变量")
+        print("单账号：export jdhf=phone@服务密码"+"\n多账号：export jdhf=phone2@服务密码&phone2@服务密码")
         exit() 
         chinaTelecomAccount = jdhf
     
