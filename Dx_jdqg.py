@@ -1,3 +1,10 @@
+# !/usr/bin/python3
+# -- coding: utf-8 --
+# -------------------------------
+#电信兑话费
+#export jdhf="phone@服务密码&phone2@服务密码"
+# -------------------------------
+# const $ = new Env('电信金豆换话费')
 import requests
 import re
 import time
