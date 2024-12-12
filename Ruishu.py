@@ -15,12 +15,6 @@ from Crypto.Util.Padding import pad, unpad
 from aiohttp import ClientSession, TCPConnector
 import httpx
 
-
-# context = ssl.create_default_context()
-# context.set_ciphers("ALL:@SECLEVEL=1")
-
-
-httpx._config.DEFAULT_CIPHERS += ":ALL:@SECLEVEL=1"
 diffValue = 2
 filename='Cache.js'
 if os.path.exists(filename):
@@ -69,10 +63,24 @@ def decrypt(text):
     plaintext = unpad(cipher.decrypt(ciphertext), DES3.block_size)
     return plaintext.decode()
 
+ssl_context = ssl.create_default_context()
+ssl_context.set_ciphers('DEFAULT@SECLEVEL=1')
+ssl_context.check_hostname = False
+ssl_context.verify_mode = ssl.CERT_NONE
+
+custom_client = httpx.Client(
+    verify=False,
+    http2=False,
+    transport=httpx.HTTPTransport(
+        retries=0,
+        verify=ssl_context
+    )
+)
+
 def initCookie(getUrl='https://wapact.189.cn:9001/gateway/standQuery/detailNew/exchange'):
     global js_code_ym, fileContent
     cookie = ''
-    response = httpx.post(getUrl)
+    response = custom_client.post(getUrl)
     content = response.text.split(' content="')[2].split('" r=')[0]
     code1 = response.text.split('$_ts=window')[1].split('</script><script type="text/javascript"')[0]
     code1Content = '$_ts=window' + code1
@@ -82,7 +90,7 @@ def initCookie(getUrl='https://wapact.189.cn:9001/gateway/standQuery/detailNew/e
     filename = 'Cache.js'
     if fileContent == '':
         if not os.path.exists(filename):
-            fileRes = httpx.get(rsurl)
+            fileRes = custom_client.get(rsurl)
             fileContent = fileRes.text
             if fileRes.status_code == 200:
                 with open(filename, 'w', encoding='utf-8') as file:
@@ -161,38 +169,38 @@ meta = [
         parentNode: {
             removeChild: function (res) {
                 console.log('meta中的removeChild：', res)
-                
+
               return content
             }
         },
-        
+
     }
 ]
 form = '<form></form>'
 
 window.addEventListener= function (res) {
         console.log('window中的addEventListener:', res)
-        
+
     }
-    
+
 document = {
     createElement: function (res) {
         console.log('document中的createElement：', res)
-        
+
        if (res === 'div') {
             return div
         } else if (res === 'form') {
             return form
         }
         else{return res}
-            
-        
+
+
 
 
     },
     addEventListener: function (res) {
         console.log('document中的addEventListener:', res)
-        
+
     },
     appendChild: function (res) {
         console.log('document中的appendChild：', res)
@@ -236,7 +244,7 @@ function main() {
 async def main(timeValue):
     global runTime, js_codeRead
     tasks = []
-    
+
     init_result = initCookie()
     if init_result:
         cookie = init_result['cookie']
@@ -244,12 +252,12 @@ async def main(timeValue):
     else:
         print("初始化 cookies 失败")
         return
-    
+
     runcookie = {
         'cookie': cookie,
         'execjsRun': execjsRun
     }
-    
+
     # 添加输出 cookies 的代码
     cookies = {
         'yiUIIlbdQT3fO': runcookie['cookie'],
@@ -258,4 +266,7 @@ async def main(timeValue):
     print(json.dumps(cookies))  # 确保输出是 JSON 格式的
 
 if __name__ == "__main__":
-    asyncio.run(main(0))
+    try:
+        asyncio.run(main(0))
+    finally:
+        custom_client.close()
