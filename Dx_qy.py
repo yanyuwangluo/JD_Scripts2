@@ -7,7 +7,7 @@
 2.修改环境变量名保持和拉菲电信金豆本环境变量一致
 3.恢复瑞数通杀.js调用地址，确实也不知道是啥。398、399行注释
 
-环境变量dxqy，值为：账号#密码
+环境变量chinaTelecomAccount，值为：账号#密码   多账号  123123#45456@123123#45456
 
 cron: 30 59 23 * * *
 const $ = new Env("电信权益");
@@ -430,7 +430,7 @@ async def qgDay(phone, ticket,  timeDiff, isTrue):
 async def main(timeDiff,isTRUE,hour):
     tasks = []
     PHONES=os.environ.get('dxqy')
-    phone_list = PHONES.split('\n')
+    phone_list = PHONES.split('@')
     for phoneV in phone_list:
         value = phoneV.split('#')
         phone, password = value[0], value[1]
@@ -463,7 +463,7 @@ if __name__ == "__main__":
         print("当前小时为: "+str(h)+"已过14点开始准备抢凌晨")
         wttime= run_Time(23,58,58) #抢凌晨
     # isTRUE=False
-    isTRUE=True
+    isTRUE=False
     #isTRUE等于False则表示忽略所有限制直接运行。这个参数一般用于测试。实际生产一定要设置为True。
     if(wttime >time.time()) :
         wTime=wttime-time.time()
