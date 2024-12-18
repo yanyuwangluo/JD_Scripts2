@@ -136,9 +136,9 @@ MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC+ugG5A8cZ3FqUKDwM57GM4io6JGcStivT8UdGt67P
 def get_first_three(value):
     # 处理数字情况
     if isinstance(value, (int, float)):
-        return int(str(value)[:3])
+        return int(str(value)[:11])
     elif isinstance(value, str):
-        return str(value)[:3]
+        return str(value)[:11]
     else:
         raise TypeError("error")
 
