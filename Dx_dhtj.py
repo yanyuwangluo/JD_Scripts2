@@ -1,3 +1,12 @@
+"""
+cron: 00 20 * * *
+new Env('电信金豆话费获取查询');
+"""
+"""
+使用方法：
+    啥也不用设置，调用的面板配置的推送
+"""
+
 import json
 from collections import defaultdict
 import sys
