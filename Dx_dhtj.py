@@ -6,10 +6,10 @@ new Env('电信金豆话费获取查询');
 使用方法：
     啥也不用设置，调用的面板配置的推送
 """
-
 import json
 from collections import defaultdict
 import sys
+import os  # 导入os模块用于检查文件是否存在
 
 
 # 控制变量，用于控制是否发送通知
@@ -25,6 +25,11 @@ if enable_notification:
 
 # 定义日志文件路径
 log_file_path = '电信金豆换话费.log'
+
+# 检查日志文件是否存在
+if not os.path.exists(log_file_path):
+    print("垃圾都没中，还统计个锤子")
+    sys.exit(0)
 
 # 读取日志数据
 def read_log_data(log_file_path):
@@ -85,4 +90,4 @@ log_content = get_log_content()
 # 如果获取到日志内容，则打印或者推送
 if log_content:
     print(log_content)  # 在这里输出日志，您可以修改为推送日志的代码
-    send('电信当月兑换统计',log_content)
+    send('电信当月兑换统计', log_content)
